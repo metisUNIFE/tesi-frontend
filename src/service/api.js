@@ -15,5 +15,11 @@ export default{
         return api.get('/review',{
             params: {title: title}
         });
+    },
+
+    history:{
+        getAll(){
+            return api.get('/review/history');
+        }
     }
 }

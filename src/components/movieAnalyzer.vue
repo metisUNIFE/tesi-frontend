@@ -5,19 +5,24 @@ import api from '@/service/api';
 const movieTitle = ref('');
 const isLoading = ref(false);
 const stats = ref(null);
+const reviewList = ref([]);
 
 const handleAnalysis = async () => {
   if(!movieTitle.value) return;
 
   stats.value = null;
+  reviewList.value = [];
   isLoading.value = true;
 
   try{
     const response = await api.analyzeAndStats(movieTitle.value);
-    stats.value = response.data;
 
-    if(!stats.value || stats.value.TOTALE=== 0){
+    stats.value = response.data.stats;
+    reviewList.value = response.data.reviews;
+
+    if(!stats.value || stats.value.TOTALE=== 0 || !reviewList.value){
       stats.value = null;
+      reviewList.value = null;
     }
   }catch(e){
     console.error(e);
@@ -88,6 +93,22 @@ const scoreColor = computed(() => {
         </div>
         <div class="progressBar-bg">
           <div class="progressBar-fill" :style="{width: positivePercentage + '%' , backgroundColor: scoreColor}"></div>
+        </div>
+      </div>
+    </div>
+
+    <div v-if="reviewList && reviewList.length > 0" class="reviews-section">
+      <h2>Dettaglio Analisi</h2>
+      <div class="reviews-list">
+        <div v-for="(review, index) in reviewList" :key="index" class="review-item">
+
+          <div class="review-header">
+            <span class="sentiment-badge" :class="review.sentiment.toLowerCase()">
+              {{ review.sentiment }}
+            </span>
+          </div>
+
+          <p class="review-text">"{{ review.text }}"</p>
         </div>
       </div>
     </div>
@@ -184,4 +205,37 @@ input {
 }
 
 .loader { color: #2196f3; margin-top: 20px; font-weight: bold; }
+
+.reviews-section { margin-top: 40px; text-align: left; }
+.reviews-list { display: flex; flex-direction: column; gap: 15px; }
+
+.review-item {
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  border-left: 5px solid #ccc; /* Default */
+}
+
+.review-text { margin: 5px 0 0 0; font-style: italic; color: #555; }
+
+.sentiment-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: white;
+}
+
+/* Classi dinamiche per i colori */
+/* Nota: usa !important o selettori specifici per sovrascrivere il bordo */
+.review-item:has(.positivo) { border-left-color: #4caf50; }
+.review-item:has(.negativo) { border-left-color: #f44336; }
+.review-item:has(.neutrale) { border-left-color: #9e9e9e; }
+
+.positivo { background-color: #4caf50; }
+.negativo { background-color: #f44336; }
+.neutrale { background-color: #9e9e9e; }
 </style>

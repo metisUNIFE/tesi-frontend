@@ -6,8 +6,45 @@ const movieTitle = ref('');
 const isLoading = ref(false);
 const stats = ref(null);
 const reviewList = ref([]);
+const progress = ref(0);
+const totalToAnalyze = ref(0);
 
-const handleAnalysis = async () => {
+const handleAnalysis = () => {
+  if (!movieTitle.value) return;
+
+  stats.value = null;
+  reviewList.value = [];
+  progress.value = 0;
+  totalToAnalyze.value = 0;
+  isLoading.value = true;
+
+  const url = `http://localhost:8080/api/review/stream?title=${encodeURIComponent(movieTitle.value)}`;
+  const eventSource = new EventSource(url);
+
+  eventSource.addEventListener('start', (event) => {
+    totalToAnalyze.value = JSON.parse(event.data);
+  });
+
+  eventSource.addEventListener('review', (event) => {
+    const reviewData = JSON.parse(event.data);
+    reviewList.value.push(reviewData);
+    progress.value++;
+  });
+
+  eventSource.addEventListener('stats', (event) => {
+    stats.value = JSON.parse(event.data);
+    isLoading.value = false;
+    eventSource.close();
+  });
+
+  eventSource.onerror = (err) => {
+    console.log("event source fail" + err);
+    eventSource.close();
+    isLoading.value = false;
+  };
+};
+
+/*const handleAnalysis = async () => {
   if(!movieTitle.value) return;
 
   stats.value = null;
@@ -30,6 +67,7 @@ const handleAnalysis = async () => {
     isLoading.value = false;
   }
 };
+*/
 
 const positivePercentage = computed(() => {
   if(!stats.value || stats.value.TOTALE === 0)return 0;
@@ -64,7 +102,13 @@ const scoreColor = computed(() => {
     </div>
 
 
-    <div v-if="isLoading" class="loader"></div>
+    <div v-if="isLoading" class="progress-container">
+      <p> Analisi in corso: {{progress}} / {{totalToAnalyze}}</p>
+      <div class="progress-track">
+        <div class="progress-bar" :style="{width: (totalToAnalyze > 0 ? (progress / totalToAnalyze * 100) : 0) + '%'}">
+        </div>
+      </div>
+    </div>
     <div v-if="stats" class="statsGrid">
       <div class="card total">
         <h3>Recensioni totali </h3>
@@ -227,6 +271,21 @@ input {
   font-weight: bold;
   text-transform: uppercase;
   color: white;
+}
+
+.progress-container { margin: 20px 0; text-align: center; }
+.progress-track {
+  width: 100%;
+  height: 10px;
+  background: #eee;
+  border-radius: 5px;
+  overflow: hidden;
+  margin-top: 5px;
+}
+.progress-bar {
+  height: 100%;
+  background: #2196f3;
+  transition: width 0.3s ease;
 }
 
 /* Classi dinamiche per i colori */

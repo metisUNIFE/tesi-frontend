@@ -1,6 +1,5 @@
 <script setup>
 import {computed, ref} from 'vue';
-import api from '@/service/api';
 
 const movieTitle = ref('');
 const isLoading = ref(false);
@@ -8,6 +7,7 @@ const stats = ref(null);
 const reviewList = ref([]);
 const progress = ref(0);
 const totalToAnalyze = ref(0);
+const wordCloudData = ref([]);
 
 const handleAnalysis = () => {
   if (!movieTitle.value) return;
@@ -32,13 +32,16 @@ const handleAnalysis = () => {
   });
 
   eventSource.addEventListener('stats', (event) => {
-    stats.value = JSON.parse(event.data);
+    const data = JSON.parse(event.data);
+    stats.value = data.stats;
+    wordCloudData.value = data.wordCloud;
     isLoading.value = false;
     eventSource.close();
   });
 
   eventSource.onerror = (err) => {
-    console.log("event source fail" + err);
+    console.error("Errore nello stream:", err);
+    alert("Errore nello stream controllare la console")
     eventSource.close();
     isLoading.value = false;
   };
@@ -138,6 +141,19 @@ const scoreColor = computed(() => {
         <div class="progressBar-bg">
           <div class="progressBar-fill" :style="{width: positivePercentage + '%' , backgroundColor: scoreColor}"></div>
         </div>
+      </div>
+    </div>
+
+    <div v-if="wordCloudData && wordCloudData.length > 0" class="cloud-section">
+      <h2>Temi ricorrenti</h2>
+      <div class="cloud-tag">
+        <span
+          v-for="tag in wordCloudData"
+          :key="tag.text"
+          class="tag"
+          :style="{ fontSize: (1+(tag.weight *0.2)) + 'rem'}">
+          {{ tag.text }}
+        </span>
       </div>
     </div>
 
@@ -297,4 +313,37 @@ input {
 .positivo { background-color: #4caf50; }
 .negativo { background-color: #f44336; }
 .neutrale { background-color: #9e9e9e; }
+
+
+.cloud-section {
+  margin-top: 40px;
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.cloud-tag {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+  padding: 20px;
+}
+
+.tag {
+  background-color: #e3f2fd;
+  color: #1565c0;
+  padding: 5px 15px;
+  border-radius: 20px;
+  font-weight: bold;
+  transition: transform 0.2s, background-color 0.2s;
+  cursor: default;
+}
+
+.tag:hover {
+  transform: scale(1.1);
+  background-color: #2196f3;
+  color: white;
+}
 </style>

@@ -144,16 +144,18 @@ const scoreColor = computed(() => {
       </div>
     </div>
 
-    <div v-if="wordCloudData && wordCloudData.length > 0" class="cloud-section">
-      <h2>Temi ricorrenti</h2>
-      <div class="cloud-tag">
-        <span
-          v-for="tag in wordCloudData"
-          :key="tag.text"
-          class="tag"
-          :style="{ fontSize: (1+(tag.weight *0.2)) + 'rem'}">
-          {{ tag.text }}
-        </span>
+    <div v-if="!isLoading" class="cloud-container">
+      <div v-if="wordCloudData && wordCloudData.length > 0" class="cloud-section">
+        <h2>Temi ricorrenti</h2>
+        <div class="cloud-tag">
+          <span
+            v-for="tag in wordCloudData"
+            :key="tag.text"
+            class="tag"
+            :style="{ fontSize: (1+(tag.weight *0.2)) + 'rem'}">
+            {{ tag.text }}
+          </span>
+        </div>
       </div>
     </div>
 

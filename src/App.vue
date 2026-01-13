@@ -1,15 +1,15 @@
 <script setup>
 import { ref } from 'vue';
-import MovieAnalyzer from './components/movieAnalyzer.vue'; // La tua dashboard attuale
-import HistoryView from './components/historyView.vue';     // La nuova pagina che creeremo tra poco
+import MovieAnalyzer from './components/movieAnalyzer.vue';
+import HistoryView from './components/historyView.vue';
 
-const currentPage = ref('dashboard'); // 'dashboard' oppure 'history'
+const currentPage = ref('dashboard');
 </script>
 
 <template>
   <main>
     <nav class="navbar">
-      <div class="logo">🎬 AI Movie Analyst</div>
+      <div class="logo">AI Review Analysis</div>
       <div class="links">
         <button
             @click="currentPage = 'dashboard'"

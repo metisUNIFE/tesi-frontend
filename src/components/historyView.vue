@@ -24,12 +24,12 @@ const formatDate = (dateString) => {
 </script>
 
 <template>
-  <div class="history-container">
+  <div class="history-container table">
     <h2>Cronologia ricerche</h2>
 
     <div v-if="isLoading">Caricamento</div>
 
-    <table v-else class="history-table">
+    <table v-else class="table">
       <thead>
       <tr>
         <th>Data</th>
@@ -65,11 +65,7 @@ const formatDate = (dateString) => {
 
 <style scoped>
 .history-container { max-width: 800px; margin: 0 auto; text-align: center; }
-.history-table { width: 100%; border-collapse: collapse; margin-top: 20px; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-th, td { padding: 15px; text-align: left; border-bottom: 1px solid #eee; }
-th { background-color: #f8f9fa; color: #666; font-weight: 600; }
 .title-cell { font-weight: bold; color: #333; text-transform: capitalize; }
-
 .score-badge { padding: 5px 10px; border-radius: 20px; color: white; font-weight: bold; font-size: 0.9rem; }
 .high { background-color: #4caf50; }
 .mid { background-color: #ff9800; }

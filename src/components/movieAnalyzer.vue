@@ -242,8 +242,18 @@ const scoreColor = computed(() => {
   justify-content: center;
 }
 
-.card h3 { margin: 0 0 10px 0; font-size: 1rem; color: #666; }
-.number {background: #bdbaba; font-size: 2.5rem; font-weight: bold; color: #333; }
+.card h3 { margin: 0 0 10px 0; font-size: 1rem; color: #666; text-align: center; }
+.number {
+  background: #bdbaba;
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #333;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+
 
 /* Colori specifici per le card */
 .positive .number { color: #4caf50; }

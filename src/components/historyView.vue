@@ -24,49 +24,142 @@ const formatDate = (dateString) => {
 </script>
 
 <template>
-  <div class="history-container table">
-    <h2>Cronologia ricerche</h2>
+  <div class="page-wrapper">
+    <h2 class="titolo">Cronologia ricerche</h2>
 
-    <div v-if="isLoading">Caricamento</div>
+    <div class="history-container">
+      <div v-if="isLoading" class="loading-text">Caricamento...</div>
 
-    <table v-else class="table">
-      <thead>
-      <tr>
-        <th>Data</th>
-        <th>Film</th>
-        <th>Recensioni analizzate</th>
-        <th>Gradimento in %</th>
-      </tr>
-      </thead>
-      <tbody>
+      <table v-else class="styled-table">
+        <thead>
+        <tr>
+          <th>Data</th>
+          <th>Film</th>
+          <th>Recensioni</th>
+          <th>Gradimento</th>
+        </tr>
+        </thead>
+        <tbody>
         <tr v-for="item in historyList" :key="item.id">
           <td>{{formatDate(item.date)}}</td>
           <td class="title-cell">{{item.title}}</td>
           <td>{{item.totalReviews}}</td>
           <td>
-            <span class="score-badge"
-                  :class="{
-                    'high' : item.score >= 70,
-                    'mid' : item.score >= 40 && item.score < 70,
-                    'low' :item.score < 40
-                  }">
-              {{item.score}}%
-            </span>
+              <span class="score-badge"
+                    :class="{
+                      'high' : item.score >= 70,
+                      'mid' : item.score >= 40 && item.score < 70,
+                      'low' :item.score < 40
+                    }">
+                {{item.score}}%
+              </span>
           </td>
         </tr>
-      </tbody>
-    </table>
-
-    <p v-if="historyList.length === 0 && !isLoading">Nessuna ricerca salvata.</p>
+        <tr v-if="historyList.length === 0">
+          <td colspan="4" style="text-align: center; padding: 20px;">Nessuna ricerca salvata.</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
-
-
 </template>
 
 <style scoped>
-.history-container { max-width: 800px; margin: 0 auto; text-align: center; }
-.title-cell { font-weight: bold; color: #333; text-transform: capitalize; }
-.score-badge { padding: 5px 10px; border-radius: 20px; color: white; font-weight: bold; font-size: 0.9rem; }
+.page-wrapper {
+  padding: 20px;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.titolo {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #333;
+}
+
+.history-container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.loading-text {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #666;
+}
+
+/* --- STILE TABELLA DARK --- */
+.styled-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+
+  /* MODIFICATO: Sfondo scuro come richiesto */
+  background-color: #3a3a3a;
+  /* MODIFICATO: Testo chiaro per leggibilità su sfondo scuro */
+  color: #ecf0f1;
+
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3); /* Ombra leggermente più scura */
+}
+
+.styled-table thead {
+  background-color: #555555; /* Header leggermente più scuro/blu */
+  color: #ffffff;
+}
+
+.styled-table th,
+.styled-table td {
+  padding: 15px 20px;
+  text-align: left;
+}
+
+/* Centratura colonne numeriche */
+.styled-table th:nth-child(3),
+.styled-table td:nth-child(3),
+.styled-table th:nth-child(4),
+.styled-table td:nth-child(4) {
+  text-align: center;
+}
+
+/* MODIFICATO: Bordi più scuri e sottili per il tema dark */
+.styled-table tbody tr {
+  border-bottom: 1px solid #555;
+}
+.styled-table td {
+  border-bottom: 1px solid #555;
+}
+
+.styled-table tbody tr:last-of-type td {
+  border-bottom: none;
+}
+
+/* MODIFICATO: Hover effect più chiaro del background ma scuro */
+.styled-table tbody tr:hover {
+  background-color: #4a4a4a;
+}
+
+/* --- CELLE SPECIFICHE --- */
+.title-cell {
+  font-weight: bold;
+  /* MODIFICATO: Colore ereditato (bianco) invece che blu scuro per leggibilità */
+  color: inherit;
+  text-transform: capitalize;
+  font-size: 1.05rem;
+}
+
+.score-badge {
+  padding: 6px 14px;
+  border-radius: 20px;
+  color: white;
+  font-weight: 600;
+  font-size: 0.9rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  display: inline-block;
+  min-width: 50px;
+}
+
+/* Colori dei badge (INVARIATI) */
 .high { background-color: #4caf50; }
 .mid { background-color: #ff9800; }
 .low { background-color: #f44336; }

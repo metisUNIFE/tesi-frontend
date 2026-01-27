@@ -1,5 +1,7 @@
 <script setup>
 import {computed, ref} from 'vue';
+import api from "@/service/api.js";
+
 
 const movieTitle = ref('');
 const isLoading = ref(false);
@@ -10,8 +12,14 @@ const totalToAnalyze = ref(0);
 const wordCloudData = ref([]);
 const summaryData = ref('');
 
+let eventSource = null;
+
 const handleAnalysis = () => {
   if (!movieTitle.value) return;
+
+  if(eventSource){
+    eventSource.close();
+  }
 
   stats.value = null;
   reviewList.value = [];
@@ -19,8 +27,7 @@ const handleAnalysis = () => {
   totalToAnalyze.value = 0;
   isLoading.value = true;
 
-  const url = `http://localhost:8080/api/review/stream?title=${encodeURIComponent(movieTitle.value)}`;
-  const eventSource = new EventSource(url);
+  eventSource = api.review.analyzeStream(movieTitle.value);
 
   eventSource.addEventListener('start', (event) => {
     totalToAnalyze.value = JSON.parse(event.data);

@@ -78,14 +78,14 @@ const scoreColor = computed(() => {
 <template>
   <div class="Dashboard"><h1>AI sentiment dashboard</h1>
     <div class="searchBox">
-    <input
-        v-model="movieTitle"
-        placeholder="Inserisci titolo di un film"
-        @keyup.enter="handleAnalysis"
-    />
-    <button class="projs__inf" @click="handleAnalysis()" :disabled="isLoading">
-      {{isLoading ? 'Analisi in corso...' : 'Analizza'}}
-    </button>
+      <input
+          v-model="movieTitle"
+          placeholder="Inserisci titolo di un film"
+          @keyup.enter="handleAnalysis"
+      />
+      <button class="projs__inf" @click="handleAnalysis()" :disabled="isLoading">
+        {{isLoading ? 'Analisi in corso...' : 'Analizza'}}
+      </button>
     </div>
 
 
@@ -149,7 +149,7 @@ const scoreColor = computed(() => {
     <div v-if="summaryData && !isLoading" class="summary-card">
       <div class="summary-header">
         <h2>Cosa dicono gli utenti</h2>
-        </div>
+      </div>
       <p class="summary-content">{{ summaryData }}</p>
     </div>
 
@@ -370,9 +370,6 @@ input {
 .review-item:has(.negativo) { border-left-color: #f44336; }
 .review-item:has(.neutrale) { border-left-color: #9e9e9e; }
 
-.positivo { background-color: #4caf50; }
-.negativo { background-color: #f44336; }
-.neutrale { background-color: #9e9e9e; }
 
 /* Sezione per resoconto recensioni */
 .summary-card {

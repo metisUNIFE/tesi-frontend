@@ -156,8 +156,8 @@ const scoreColor = computed(() => {
 
     <div v-if="reviewList && reviewList.length > 0" class="reviews-section">
       <h2>Dettaglio Analisi</h2>
-      <div class="reviews-list">
-        <div v-for="(review, index) in reviewList" :key="index" class="review-item">
+      <div class="reviews-list" >
+        <div v-for="(review, index) in reviewList" :key="index" class="review-item" >
 
           <div class="review-header">
             <span class="sentiment-badge" :class="review.sentiment.toLowerCase()">
@@ -337,7 +337,7 @@ input {
   border-left: 5px solid #ccc; /* Default */
 }
 
-.review-text { margin: 5px 0 0 0; font-style: italic; color: #555; }
+.review-text { margin: 5px 0 0 0; font-style: italic; }
 
 .sentiment-badge {
   display: inline-block;
@@ -369,6 +369,10 @@ input {
 .review-item:has(.positivo) { border-left-color: #4caf50; }
 .review-item:has(.negativo) { border-left-color: #f44336; }
 .review-item:has(.neutrale) { border-left-color: #9e9e9e; }
+
+.positivo { background-color: #4caf50; }
+.negativo { background-color: #f44336; }
+.neutrale { background-color: #9e9e9e; }
 
 
 /* Sezione per resoconto recensioni */
